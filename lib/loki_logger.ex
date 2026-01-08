@@ -1,6 +1,11 @@
 defmodule LokiLogger do
+  @moduledoc """
+  This module handles incoming log events using `:gen_event`, stores them
+  and based on the applied configuration sends them to Loki when certain
+  criteria is met.
+  """
+
   @behaviour :gen_event
-  @moduledoc false
 
   defstruct buffer: [],
             buffer_size: 0,
@@ -169,7 +174,7 @@ defmodule LokiLogger do
     |> LokiLogger.Exporter.submit()
   end
 
-  defp format_event(level, msg, ts, md, %{format: format, metadata: keys} = _state) do
+  defp format_event(level, msg, ts, md, _state = %{format: format, metadata: keys}) do
     List.to_string(Logger.Formatter.format(format, level, msg, ts, take_metadata(md, keys)))
   end
 
@@ -190,7 +195,7 @@ defmodule LokiLogger do
     )
   end
 
-  defp log_buffer(%{buffer_size: 0, buffer: []} = state), do: state
+  defp log_buffer(state = %{buffer_size: 0, buffer: []}), do: state
 
   defp log_buffer(state) do
     state.buffer |> async_io()

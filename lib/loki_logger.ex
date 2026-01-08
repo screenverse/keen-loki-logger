@@ -2,8 +2,6 @@ defmodule LokiLogger do
   @behaviour :gen_event
   @moduledoc false
 
-  @default_loki_host "http://localhost:3100"
-
   defstruct buffer: [],
             buffer_size: 0,
             format: nil,
@@ -135,9 +133,6 @@ defmodule LokiLogger do
         supervisor: supervisor_pid
     }
   end
-
-  defp get_loki_host_config({_, _, _}), do: @default_loki_host
-  defp get_loki_host_config(loki_host), do: loki_host
 
   defp configure_metadata(:all), do: :all
   defp configure_metadata(metadata), do: Enum.reverse(metadata)

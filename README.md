@@ -73,7 +73,7 @@ Loki Logger's behavior is controlled using the application configuration environ
 * __loki_path__ : [OPTIONAL] path to the endpoint, default `/loki/api/v1/push`
 * __loki_labels__ : [OPTIONAL] the Loki log labels used to select the log stream in, default `%{application: "loki_logger_library"}`
 * __loki_scope_org_id__: [OPTIONAL] optional tenant ID for multitenancy, default `fake`, which is a standard Loki value when you have just one tenant
-* __level__: [OPTIONAL] logging threshold. Messages "above" this threshold will be discarded. The supported levels, ordered by precedence are :debug, :info, :warn, :error.
+* __level__: [OPTIONAL] logging threshold. Messages "above" this threshold will be discarded. The supported levels, ordered by precedence are :debug, :info, :warning, :error.
 * __format__: [OPTIONAL] the format message used to print logs. Defaults to: "$metadata level=$level $levelpad$message". It may also be a {module, function} tuple that is invoked with the log level, the message, the current timestamp and the metadata.
 * __metadata__: [OPTIONAL] the metadata to be printed by $metadata. Defaults to :all, which prints all metadata to the message.
 * __max_buffer__: [OPTIONAL] the amount of entries to buffer before posting to the Loki REST api. Defaults to 32.  

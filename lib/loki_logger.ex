@@ -29,6 +29,8 @@ defmodule LokiLogger do
   def handle_event({level, _gl, {Logger, msg, ts, md}}, state) do
     %{level: log_level, buffer_size: buffer_size, max_buffer: max_buffer} = state
 
+    level = maybe_convert_warn_to_warning(level)
+
     cond do
       not meet_level?(level, log_level) ->
         {:ok, state}
@@ -63,6 +65,9 @@ defmodule LokiLogger do
   end
 
   ## Helpers
+
+  defp maybe_convert_warn_to_warning(:warn), do: :warning
+  defp maybe_convert_warn_to_warning(level), do: level
 
   defp meet_level?(_lvl, nil), do: true
 

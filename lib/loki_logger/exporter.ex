@@ -1,7 +1,15 @@
 defmodule LokiLogger.Exporter do
+  @moduledoc """
+  This module defines a GenServer that export logs to Loki
+  """
+
   use GenServer
 
   defmodule State do
+    @moduledoc """
+    Small module that owns the internal state of the Exporter
+    """
+
     @type t :: %__MODULE__{
             tesla_client: any(),
             loki_url: bitstring(),
@@ -69,7 +77,7 @@ defmodule LokiLogger.Exporter do
   end
 
   @impl true
-  def handle_info({:DOWN, ref, :process, _pid, _reason}, %{task_ref: ref} = state) do
+  def handle_info({:DOWN, ref, :process, _pid, _reason}, state = %{task_ref: ref}) do
     state
     |> next_task()
     |> then(fn state ->
@@ -83,9 +91,7 @@ defmodule LokiLogger.Exporter do
   end
 
   defp generate_bin_push_request(loki_labels, output) do
-    labels =
-      Enum.map(loki_labels, fn {k, v} -> "#{k}=\"#{v}\"" end)
-      |> Enum.join(",")
+    labels = Enum.map_join(loki_labels, ",", fn {k, v} -> "#{k}=\"#{v}\"" end)
 
     labels = "{" <> labels <> "}"
 
